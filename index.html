@@ -1,79 +1,57 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Site</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Alchemy Crafting Game</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .element { width: 50px; height: 50px; border: 1px solid #000; margin: 5px; display: inline-block; cursor: move; }
+        .drop-zone { width: 300px; height: 300px; border: 2px dashed #888; margin: 20px; }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="container">
-                <h1 class="logo">Meu Site</h1>
-                <ul class="nav-links">
-                    <li><a href="#home">Início</a></li>
-                    <li><a href="#about">Sobre</a></li>
-                    <li><a href="#services">Serviços</a></li>
-                    <li><a href="#contact">Contato</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+    <h1>Alchemy Crafting Game</h1>
+    <div id="elements"></div>
+    <div class="drop-zone" id="drop-zone">Drop elements here to combine!</div>
+    <div id="score">Score: 0</div>
+    <script>
+        // Initialize variables
+        const elements = [];
+        let score = 0;
 
-    <main>
-        <section id="home" class="hero">
-            <div class="container">
-                <h2>Bem-vindo ao Meu Site!</h2>
-                <p>Este é um site básico criado com HTML e CSS</p>
-                <button class="btn">Saiba Mais</button>
-            </div>
-        </section>
+        // Create 200 basic elements
+        for (let i = 1; i <= 200; i++) {
+            elements.push(`Element ${i}`);
+        }
 
-        <section id="about" class="about">
-            <div class="container">
-                <h2>Sobre Nós</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </div>
-        </section>
+        // Load elements into the DOM
+        const elementsDiv = document.getElementById('elements');
+        elements.forEach((element, index) => {
+            const elemDiv = document.createElement('div');
+            elemDiv.className = 'element';
+            elemDiv.draggable = true;
+            elemDiv.innerText = element;
+            elemDiv.ondragstart = (e) => {
+                e.dataTransfer.setData('text/plain', element);
+            };
+            elementsDiv.appendChild(elemDiv);
+        });
 
-        <section id="services" class="services">
-            <div class="container">
-                <h2>Serviços</h2>
-                <div class="services-grid">
-                    <div class="service-card">
-                        <h3>Serviço 1</h3>
-                        <p>Descrição do primeiro serviço</p>
-                    </div>
-                    <div class="service-card">
-                        <h3>Serviço 2</h3>
-                        <p>Descrição do segundo serviço</p>
-                    </div>
-                    <div class="service-card">
-                        <h3>Serviço 3</h3>
-                        <p>Descrição do terceiro serviço</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        // Handle drop event
+        const dropZone = document.getElementById('drop-zone');
+        dropZone.ondragover = (e) => { e.preventDefault(); };
+        dropZone.ondrop = (e) => {
+            e.preventDefault();
+            const droppedElement = e.dataTransfer.getData('text/plain');
+            combineElements(droppedElement);
+        };
 
-        <section id="contact" class="contact">
-            <div class="container">
-                <h2>Entre em Contato</h2>
-                <form class="contact-form">
-                    <input type="text" placeholder="Seu nome" required>
-                    <input type="email" placeholder="Seu email" required>
-                    <textarea placeholder="Sua mensagem" rows="5" required></textarea>
-                    <button type="submit" class="btn">Enviar</button>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 Meu Site. Todos os direitos reservados.</p>
-        </div>
-    </footer>
+        function combineElements(element) {
+            score += 10; // Score increment
+            document.getElementById('score').innerText = `Score: ${score}`;
+            alert(`Combined element: ${element}`);
+        }
+    </script>
 </body>
 </html>
